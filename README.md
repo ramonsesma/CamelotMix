@@ -26,7 +26,7 @@ HarmonicMix.recommend(
 ## Install
 
 ```supercollider
-Quarks.install("https://github.com/studio-sesma/CamelotMix");
+Quarks.install("https://github.com/ramonsesma/CamelotMix");
 ```
 
 For local development, clone into

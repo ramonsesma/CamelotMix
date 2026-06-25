@@ -6,6 +6,6 @@
     isCompatible: { true },
     dependencies: [],
     author: "Studio Sesma",
-    url: "https://github.com/studio-sesma/CamelotMix",
+    url: "https://github.com/ramonsesma/CamelotMix",
     license: "MIT"
 )
