@@ -1,5 +1,5 @@
-name-template: ''v$RESOLVED_VERSION''
-tag-template: ''v$RESOLVED_VERSION''
+name-template: 'v$RESOLVED_VERSION'
+tag-template: 'v$RESOLVED_VERSION'
 template: |
   ## Changes
 
@@ -8,7 +8,7 @@ template: |
   ## Installation
 
   ```supercollider
-  Quarks.install("https://github.com/studio-sesma/CamelotMix")
+  Quarks.install("https://github.com/ramonsesma/CamelotMix")
   ```
 
   ## Notes
@@ -16,58 +16,58 @@ template: |
   - Review `README.md` for setup, optional dependencies, and test instructions.
   - Update `CHANGELOG.md` if the release introduces manual notes that should live in-repo.
 
-change-template: ''- $TITLE (#$NUMBER) @$AUTHOR''
-change-title-escapes: ''\<*_&''
-no-changes-template: ''- No user-facing changes in this draft yet.''
+change-template: '- $TITLE (#$NUMBER) @$AUTHOR'
+change-title-escapes: '\<*_&'
+no-changes-template: '- No user-facing changes in this draft yet.'
 categories:
-  - title: ''Features''
+  - title: 'Features'
     labels:
-      - ''feature''
-      - ''enhancement''
-  - title: ''Fixes''
+      - 'feature'
+      - 'enhancement'
+  - title: 'Fixes'
     labels:
-      - ''fix''
-      - ''bug''
-      - ''bugfix''
-  - title: ''Documentation''
+      - 'fix'
+      - 'bug'
+      - 'bugfix'
+  - title: 'Documentation'
     labels:
-      - ''documentation''
-      - ''docs''
-  - title: ''Maintenance''
+      - 'documentation'
+      - 'docs'
+  - title: 'Maintenance'
     labels:
-      - ''chore''
-      - ''ci''
-      - ''maintenance''
+      - 'chore'
+      - 'ci'
+      - 'maintenance'
 exclude-labels:
-  - ''skip-changelog''
+  - 'skip-changelog'
 version-resolver:
   major:
     labels:
-      - ''major''
+      - 'major'
   minor:
     labels:
-      - ''feature''
-      - ''enhancement''
+      - 'feature'
+      - 'enhancement'
   patch:
     labels:
-      - ''fix''
-      - ''bug''
-      - ''bugfix''
-      - ''documentation''
-      - ''docs''
-      - ''chore''
-      - ''ci''
-      - ''maintenance''
+      - 'fix'
+      - 'bug'
+      - 'bugfix'
+      - 'documentation'
+      - 'docs'
+      - 'chore'
+      - 'ci'
+      - 'maintenance'
   default: patch
 autolabeler:
-  - label: ''documentation''
+  - label: 'documentation'
     files:
-      - ''*.md''
-      - ''HelpSource/**''
-  - label: ''ci''
+      - '*.md'
+      - 'HelpSource/**'
+  - label: 'ci'
     files:
-      - ''.github/**''
-  - label: ''feature''
+      - '.github/**'
+  - label: 'feature'
     files:
-      - ''Classes/**''
-      - ''tests/**''
+      - 'Classes/**'
+      - 'tests/**'
