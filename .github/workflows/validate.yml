@@ -1,0 +1,46 @@
+name: Validate
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  test-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install SuperCollider
+        shell: powershell
+        run: choco install supercollider --yes --no-progress
+
+      - name: Run UnitTests
+        shell: powershell
+        run: |
+          $sclang = Get-ChildItem ''C:\Program Files'' -Directory -Filter ''SuperCollider*'' |
+            Sort-Object Name -Descending |
+            ForEach-Object { Join-Path $_.FullName ''sclang.exe'' } |
+            Where-Object { Test-Path $_ } |
+            Select-Object -First 1
+          $configPath = Join-Path $env:RUNNER_TEMP ''sclang_conf.yaml''
+
+          if (-not $sclang) {
+            throw ''Unable to locate sclang.exe under C:\Program Files.''
+          }
+
+          $configLines = @(
+            ''includePaths:''
+            "    -   $env:GITHUB_WORKSPACE\Classes"
+            "    -   $env:GITHUB_WORKSPACE\tests"
+            ''excludePaths: []''
+            ''postInlineWarnings: false''
+            ''excludeDefaultPaths: false''
+          )
+
+          $configLines | Set-Content -LiteralPath $configPath -Encoding ascii
+
+          & $sclang -l $configPath -r -s ''tests\RunCamelotMix.scd''

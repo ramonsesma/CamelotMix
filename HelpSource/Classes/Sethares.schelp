@@ -1,0 +1,60 @@
+CLASS:: Sethares
+summary:: Spectral roughness via the Sethares dissonance model (Sethares 1993)
+categories:: Quarks>CamelotMix
+related:: Classes/Camelot, Classes/HarmonicMix
+
+DESCRIPTION::
+Computes psychoacoustic roughness between two spectra given as frequency + amplitude arrays. Implements the same formula as link::Classes/Dissonance::'s code::dissmeasure:: (from the link::https://github.com/supercollider-quarks/DissonanceLib##DissonanceLib quark::) with identical constants, but ships standalone so CamelotMix has no hard dependency on DissonanceLib.
+
+Typical use: feed the top-N FFT peaks of two audio tracks and use the result as a "blend cleanliness" signal alongside Camelot key matching.
+
+code::
+// Top partials of two short tones
+~partialsA = [[220, 440, 880], [1, 0.7, 0.3]];
+~partialsB = [[225, 450, 900], [1, 0.7, 0.3]];
+
+Sethares.dissmeasure(~partialsA[0], ~partialsA[1], ~partialsB[0], ~partialsB[1]);
+// -> a non-negative roughness scalar; higher = rougher
+
+Sethares.spectralCompatibility(~partialsA[0], ~partialsA[1], ~partialsB[0], ~partialsB[1]);
+// -> 0..1 where 1 = no roughness
+::
+
+CLASSMETHODS::
+
+METHOD:: dissmeasure
+Raw Sethares roughness between two spectra. Same constants as Sethares' 1993 paper.
+
+ARGUMENT:: freqsA
+Array of partial frequencies in Hz for spectrum A.
+
+ARGUMENT:: ampsA
+Array of partial amplitudes (matching size).
+
+ARGUMENT:: freqsB
+Array of partial frequencies in Hz for spectrum B.
+
+ARGUMENT:: ampsB
+Array of partial amplitudes.
+
+returns:: A non-negative Float. Zero when either spectrum is empty.
+
+METHOD:: spectralCompatibility
+Normalised 0..1 compatibility score. 1 = no roughness, 0 = saturated.
+
+ARGUMENT:: freqsA
+Frequencies of spectrum A.
+
+ARGUMENT:: ampsA
+Amplitudes of spectrum A.
+
+ARGUMENT:: freqsB
+Frequencies of spectrum B.
+
+ARGUMENT:: ampsB
+Amplitudes of spectrum B.
+
+ARGUMENT:: baselineRoughness
+Reference roughness value used to normalise (default 6 — calibrated for top-10 pop spectra).
+
+returns:: A Float in [0, 1]. Returns 0.5 (neutral) when either spectrum is missing.

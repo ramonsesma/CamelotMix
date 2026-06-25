@@ -1,0 +1,73 @@
+name-template: ''v$RESOLVED_VERSION''
+tag-template: ''v$RESOLVED_VERSION''
+template: |
+  ## Changes
+
+  $CHANGES
+
+  ## Installation
+
+  ```supercollider
+  Quarks.install("https://github.com/studio-sesma/CamelotMix")
+  ```
+
+  ## Notes
+
+  - Review `README.md` for setup, optional dependencies, and test instructions.
+  - Update `CHANGELOG.md` if the release introduces manual notes that should live in-repo.
+
+change-template: ''- $TITLE (#$NUMBER) @$AUTHOR''
+change-title-escapes: ''\<*_&''
+no-changes-template: ''- No user-facing changes in this draft yet.''
+categories:
+  - title: ''Features''
+    labels:
+      - ''feature''
+      - ''enhancement''
+  - title: ''Fixes''
+    labels:
+      - ''fix''
+      - ''bug''
+      - ''bugfix''
+  - title: ''Documentation''
+    labels:
+      - ''documentation''
+      - ''docs''
+  - title: ''Maintenance''
+    labels:
+      - ''chore''
+      - ''ci''
+      - ''maintenance''
+exclude-labels:
+  - ''skip-changelog''
+version-resolver:
+  major:
+    labels:
+      - ''major''
+  minor:
+    labels:
+      - ''feature''
+      - ''enhancement''
+  patch:
+    labels:
+      - ''fix''
+      - ''bug''
+      - ''bugfix''
+      - ''documentation''
+      - ''docs''
+      - ''chore''
+      - ''ci''
+      - ''maintenance''
+  default: patch
+autolabeler:
+  - label: ''documentation''
+    files:
+      - ''*.md''
+      - ''HelpSource/**''
+  - label: ''ci''
+    files:
+      - ''.github/**''
+  - label: ''feature''
+    files:
+      - ''Classes/**''
+      - ''tests/**''

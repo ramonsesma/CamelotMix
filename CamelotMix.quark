@@ -1,0 +1,11 @@
+(
+    name: "CamelotMix",
+    summary: "Harmonic mixing for SuperCollider — Camelot wheel key compatibility + Sethares spectral roughness, packaged for DJ track selection and live coding.",
+    version: "0.1.0",
+    schelp: "CamelotMix",
+    isCompatible: { true },
+    dependencies: [],
+    author: "Studio Sesma",
+    url: "https://github.com/studio-sesma/CamelotMix",
+    license: "MIT"
+)

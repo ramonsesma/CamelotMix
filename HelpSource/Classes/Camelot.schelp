@@ -1,0 +1,74 @@
+CLASS:: Camelot
+summary:: Camelot wheel — DJ key shorthand for harmonic mixing
+categories:: Quarks>CamelotMix
+related:: Classes/Sethares, Classes/HarmonicMix
+
+DESCRIPTION::
+Maps musical keys to the link::https://mixedinkey.com/harmonic-mixing-guide/##Camelot wheel:: shorthand used by working DJs, and scores compatibility between any two key labels.
+
+Major keys map to strong::B:: slots (8B = C major), minor keys to strong::A:: slots (8A = A minor — the relative minor of C major). Adjacent slots and relative pairs are considered compatible; tracks across the wheel are not.
+
+This class has no UGen dependencies — it is pure metadata + arithmetic, safe to load on any SuperCollider install.
+
+code::
+Camelot.fromKey("A minor");        // -> "8A"
+Camelot.fromKey("F# major");       // -> "2B"
+Camelot.fromKey("A");              // -> "8A" (bare letters fall back to minor)
+Camelot.compatibility("A minor", "E minor");   // -> 0.85
+Camelot.compatibility("A minor", "C major");   // -> 0.8 (relative pair)
+Camelot.compatibility("A minor", "Eb major");  // -> 0.3 (across the wheel)
+::
+
+CLASSMETHODS::
+
+METHOD:: fromKey
+Returns the Camelot label for a key string, or strong::nil:: when unknown.
+
+ARGUMENT:: key
+A string like code::"A minor"::, code::"C major"::, code::"F# minor"::. Bare letters (code::"A"::, code::"C#"::) are treated as minor.
+
+returns:: A String like code::"8A":: or nil.
+
+METHOD:: toKey
+Inverse of strong::fromKey:: — look up the canonical key name for a Camelot label.
+
+ARGUMENT:: camelotLabel
+A label like code::"8A":: or code::"12B"::.
+
+returns:: A canonical key name as a Symbol, or nil.
+
+METHOD:: parts
+Splits a Camelot label into its number and letter components.
+
+ARGUMENT:: camelotLabel
+A label like code::"8A"::.
+
+returns:: An Event code::(number: 8, letter: \A):: or nil.
+
+METHOD:: compatibility
+Score between two key labels in the range 0..1, where 1 is identical and 0.25 is far across the wheel. Returns 0.5 (neutral) when either key is missing.
+
+ARGUMENT:: fromKey
+The current key.
+
+ARGUMENT:: toKey
+The candidate key.
+
+returns:: A Float in [0.25, 1.0].
+
+METHOD:: table
+The IdentityDictionary mapping canonical key Symbols to Camelot labels. Read-only — modifying it will skew compatibility scores.
+
+EXAMPLES::
+
+code::
+// Filter a library of tracks down to the ones harmonically compatible
+// with what's currently playing.
+~current = "A minor";
+~library = [
+    (title: "track A", key: "E minor"),
+    (title: "track B", key: "C major"),
+    (title: "track C", key: "F# major")
+];
+~library.select({ |t| Camelot.compatibility(~current, t[\key]) >= 0.8 });
+::

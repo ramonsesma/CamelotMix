@@ -1,0 +1,99 @@
+CLASS:: HarmonicMix
+summary:: Combine Camelot key + Sethares roughness + BPM proximity into a single track-to-track compatibility score
+categories:: Quarks>CamelotMix
+related:: Classes/Camelot, Classes/Sethares
+
+DESCRIPTION::
+Facade over link::Classes/Camelot:: and link::Classes/Sethares:: that returns a single 0..1 score for "should this be the next track?". The score is a weighted sum of:
+
+list::
+## strong::keyCompat:: — Camelot wheel adjacency (default weight 0.5)
+## strong::spectralCompat:: — Sethares roughness over top partials (0.3)
+## strong::bpmCompat:: — relative BPM proximity (0.2)
+::
+
+Any missing signal degrades to 0.5 (neutral) so missing metadata never punishes a candidate.
+
+code::
+HarmonicMix.score(
+    "A minor", "E minor",       // fromKey, toKey
+    124, 124,                    // fromBpm, toBpm
+    nil, nil                     // optional spectra
+);
+// -> (total: 0.95, keyCompat: 0.85, spectralCompat: 0.5, bpmCompat: 1.0, ...)
+
+HarmonicMix.recommend(
+    "A minor", 124, nil,
+    [
+        (key: "Eb major", bpm: 132),
+        (key: "A minor",  bpm: 124),
+        (key: "E minor",  bpm: 122)
+    ],
+    3
+);
+::
+
+CLASSMETHODS::
+
+METHOD:: score
+Compute a candidate score.
+
+ARGUMENT:: fromKey
+The current track's key string.
+
+ARGUMENT:: toKey
+The candidate track's key string.
+
+ARGUMENT:: fromBpm
+The current track's BPM (or nil).
+
+ARGUMENT:: toBpm
+The candidate track's BPM (or nil).
+
+ARGUMENT:: fromPartials
+Optional code::[freqs, amps]:: arrays for the current track's spectrum.
+
+ARGUMENT:: toPartials
+Optional code::[freqs, amps]:: arrays for the candidate.
+
+ARGUMENT:: refBpm
+Reference BPM used to scale the BPM-compatibility term. Defaults to whichever BPM is non-nil, else 120.
+
+ARGUMENT:: weights
+Override Event for the weights — defaults to code::(key: 0.5, spectral: 0.3, bpm: 0.2)::.
+
+returns:: An Event with keys strong::total, keyCompat, spectralCompat, bpmCompat, camelotFrom, camelotTo::.
+
+METHOD:: recommend
+Rank a list of candidates by total score, return the top N.
+
+ARGUMENT:: currentKey
+Current track's key.
+
+ARGUMENT:: currentBpm
+Current track's BPM.
+
+ARGUMENT:: currentPartials
+Optional current spectrum (code::[freqs, amps]::).
+
+ARGUMENT:: candidates
+Array of Events: code::(key: ..., bpm: ..., partials: [freqs, amps] ?)::.
+
+ARGUMENT:: topN
+How many to return (default 5).
+
+returns:: Array of Events code::(candidate: ..., score: ...)::, sorted by code::score.total:: descending.
+
+METHOD:: bpmCompatibility
+Standalone BPM-compatibility helper. Linear falloff: 0% diff → 1.0, ±5% of refBpm → 0.5, ±10% → 0. Returns 0.5 when either BPM is missing.
+
+ARGUMENT:: fromBpm
+Current BPM.
+
+ARGUMENT:: toBpm
+Candidate BPM.
+
+ARGUMENT:: refBpm
+Reference BPM (default 120).
+
+returns:: A Float in [0, 1].
